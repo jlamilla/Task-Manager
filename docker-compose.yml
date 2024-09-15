@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Servicio para la base de datos PostgreSQL
+  postgres:
+    image: postgres:13
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: tu_usuario
+      POSTGRES_PASSWORD: tu_contraseña
+      POSTGRES_DB: task_management_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - dvp_network
+
+  # Servicio para la API de .NET
+  api:
+    build:
+      context: ./TaskManagementAPI
+      dockerfile: Dockerfile
+    container_name: task-api
+    ports:
+      - "5000:80"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=postgres-db;Port=5432;Database=task_management_db;Username=tu_usuario;Password=tu_contraseña"
+    depends_on:
+      - postgres
+    networks:
+      - dvp_network
+
+  # Servicio para la aplicación Angular
+  angular:
+    build:
+      context: ./TaskManagementApp
+      dockerfile: Dockerfile
+    container_name: task-angular
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+    networks:
+      - dvp_network
+
+networks:
+  dvp_network:
+    driver: bridge
+
+volumes:
+  pgdata:
