@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { SharedModule } from '../shared/shared.module';
+import { ProfileGateway } from 'src/app/domain/models/profile/gateway/profile-gateway';
+import { ProfileApiService } from 'src/app/infraestructure/driven-adapter/profile/profile-api.service';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,12 @@ import { SharedModule } from '../shared/shared.module';
     AppRoutingModule,
     SharedModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: ProfileGateway,
+      useClass: ProfileApiService,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

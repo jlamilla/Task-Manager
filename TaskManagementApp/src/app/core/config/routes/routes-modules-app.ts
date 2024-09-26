@@ -11,7 +11,7 @@ export class RoutesModulesApp {
   static NOTFOUND: string = 'aplication/not-found';
   static LOGOUT: string = 'aplication/logout';
 
-  static PARAMETERIZATION: string = 'aplication/parameterization';
+  static DASHBOARD: string = 'aplication/dashboard';
   static SETTINGS: string = 'aplication/settings';
   static EVALUATIONS: string = 'aplication/evaluations';
   static REPORTS: string = 'aplication/reports';
@@ -19,7 +19,7 @@ export class RoutesModulesApp {
   static getRoute(index: number): string {
     switch (index) {
       case 0:
-        return RoutesModulesApp.PARAMETERIZATION;
+        return RoutesModulesApp.DASHBOARD;
       case 1:
         return RoutesModulesApp.SETTINGS;
       case 2:
@@ -27,7 +27,7 @@ export class RoutesModulesApp {
       case 3:
         return RoutesModulesApp.REPORTS;
       default:
-        return RoutesModulesApp.PARAMETERIZATION;
+        return RoutesModulesApp.DASHBOARD;
     }
   }
 }

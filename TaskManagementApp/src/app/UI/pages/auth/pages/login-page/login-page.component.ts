@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { RoutesModulesApp } from 'src/app/core/config/routes/routes-modules-app';
+import { UserUseCases } from 'src/app/domain/use_cases/user-use-case/user-use-cases';
+import { AuthService } from 'src/app/infraestructure/services/auth.service';
 import Swal from 'sweetalert2'
-
-import { AuthService } from '../../services/auth.service';
 
 
 @Component({
@@ -14,7 +15,8 @@ export class LoginPageComponent {
 
   private fb          = inject( FormBuilder );
   private authService = inject( AuthService );
-  private router      = inject( Router )
+  private router      = inject( Router );
+  private userUseCase = inject( UserUseCases );
 
 
   public myForm: FormGroup = this.fb.group({
@@ -26,14 +28,14 @@ export class LoginPageComponent {
   login() {
     const { email, password } = this.myForm.value;
 
-    this.authService.login(email, password)
-      .subscribe({
-        next: () => this.router.navigateByUrl('/dashboard'),
-        error: (message) => {
-          Swal.fire('Error', message, 'error' )
-        }
-      })
-
+    this.userUseCase.login({email: email, password: password}).subscribe({
+      next: ( data: { token: string }) => {
+        this.authService.login(data.token);
+        this.router.navigate([RoutesModulesApp.DASHBOARD]);
+      },
+      error: (message) => {
+        Swal.fire('Error', message, 'error' )
+      }
+    });
   }
-
 }
